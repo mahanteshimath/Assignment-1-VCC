@@ -21,8 +21,8 @@ Create and configure multiple Virtual Machines (VMs) using VirtualBox, establish
 
 Ensure you have the following software downloaded:
 
-- **Oracle VirtualBox**: Download the installer for your operating system (Windows, macOS, or Linux) from the official website.
-- **Ubuntu ISO**: Download the Ubuntu Server or Desktop ISO image (Version 24.04 LTS is recommended).
+- **Oracle VirtualBox**: for Windoows https://www.virtualbox.org/wiki/Downloads
+- **Ubuntu ISO**: Desktop ISO image (Version 24.04 LTS is recommended) https://ubuntu.com/download/desktop
 
 ### 2.2 Create Virtual Machines
 
