@@ -47,7 +47,7 @@ You must create three separate Virtual Machines:
 
 ### 3.1 Verify Connectivity
 
-1. Open the terminal in VM1 and VM2.
+1. Open the terminal in MH-VM1 and MH-VM2.
 2. Find the IP address of each machine using the following command:
 
 ```bash
