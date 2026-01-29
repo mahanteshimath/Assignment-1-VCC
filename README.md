@@ -162,6 +162,8 @@ If both VMs show the same IP address (e.g., 10.0.2.15), you need to configure a 
    ping 192.168.56.10
    ```
 
+   ![alt text](image-3.png)
+
 **Note**: Update all IP addresses in subsequent steps to use the new static IPs (192.168.56.10 and 192.168.56.11).
 
 ### 3.3 Install Dependencies (VM1 & VM2)
