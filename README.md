@@ -28,14 +28,14 @@ Ensure you have the following software downloaded:
 
 You must create three separate Virtual Machines:
 
-- **MH_VM1**: Application Server 1
-- **MH_VM2**: Application Server 2
-- **MH_VM3**: Load Balancer
+- **MH-VM1**: Application Server 1
+- **MH-VM2**: Application Server 2
+- **MH-VM3**: Load Balancer
 
 **Steps for each VM:**
 
 1. Open VirtualBox and click the **New** button.
-2. **Name**: Enter a unique name (e.g., "Microservice MH_VM1").
+2. **Name**: Enter a unique name (e.g., "Microservice MH-VM1").
 3. **ISO Image**: Select the downloaded Ubuntu ISO file.
 4. **Hardware**: Allocate at least 2GB of RAM and 2 CPUs.
 5. **Hard Disk**: The default 25GB is sufficient.
