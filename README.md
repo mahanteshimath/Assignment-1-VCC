@@ -1,2 +1,270 @@
 # Assignment-1-VCC
-Assignment 1-VCC
+
+## Assignment Objective:
+Create and configure multiple Virtual Machines (VMs) using VirtualBox, establish a network between them, and deploy a microservice-based application across the connected VMs.
+
+## Deliverables:
+
+1. **Document Report:**
+    - Step-by-Step Instructions for Implementation:
+        - Installation of VirtualBox and creation of multiple VMs.
+        - Configuration of network settings to connect the VMs.
+        - Deployment of a simple microservice application (e.g., a RESTful API or a Node.js-based service) across the VMs.
+
+2. **Architecture Design:**
+    - Diagram showing the connection of VMs and their roles in hosting the microservice application.
+    - Detailed steps
+
+## 2. Phase 1: Environment Setup
+
+### 2.1 Download Prerequisites
+
+Ensure you have the following software downloaded:
+
+- **Oracle VirtualBox**: Download the installer for your operating system (Windows, macOS, or Linux) from the official website.
+- **Ubuntu ISO**: Download the Ubuntu Server or Desktop ISO image (Version 24.04 LTS is recommended).
+
+### 2.2 Create Virtual Machines
+
+You must create three separate Virtual Machines:
+
+- **VM1**: Application Server 1
+- **VM2**: Application Server 2
+- **VM3**: Load Balancer
+
+**Steps for each VM:**
+
+1. Open VirtualBox and click the **New** button.
+2. **Name**: Enter a unique name (e.g., "Microservice VM1").
+3. **ISO Image**: Select the downloaded Ubuntu ISO file.
+4. **Hardware**: Allocate at least 2GB of RAM and 2 CPUs.
+5. **Hard Disk**: The default 25GB is sufficient.
+6. **Finish**: Click Finish to create the VM.
+7. **Install OS**: Start the VM and follow the on-screen prompts to install Ubuntu.
+8. **Repeat**: Perform these steps again to create VM2 and VM3.
+
+## 3. Phase 2: Networking & Basic Configuration
+
+### 3.1 Verify Connectivity
+
+1. Open the terminal in VM1 and VM2.
+2. Find the IP address of each machine using the following command:
+
+```bash
+ip a
+```
+
+3. Note down the IP addresses (e.g., 10.0.2.4 for VM1 and 10.0.2.5 for VM2).
+
+### 3.2 Test Connection
+
+To ensure the VMs can communicate with each other, run a ping command from VM2 to VM1:
+
+```bash
+ping <VM1_IP_ADDRESS>
+```
+
+If you see bytes being transferred, the connection is successful.
+
+### 3.3 Install Dependencies (VM1 & VM2)
+
+Update the package manager and install Node.js and npm on both application VMs (VM1 and VM2):
+
+```bash
+sudo apt update
+sudo apt install -y nodejs npm
+```
+
+## 4. Phase 3: Microservice Development (VM1)
+
+### 4.1 Initialize Project
+
+Create a new directory for your service:
+
+```bash
+mkdir new-service && cd new-service
+```
+
+Initialize the Node.js project:
+
+```bash
+npm init -y
+```
+
+Install the Express framework:
+
+```bash
+npm install express
+```
+
+### 4.2 Create Application Code
+
+Create a file named `index.js` using a text editor (like nano or vi) and paste the following code:
+
+```javascript
+const express = require('express');
+const app = express();
+const port = 3000;
+
+app.get('/', (req, res) => {
+    res.json({ message: 'Hello from Ubuntu VM' });
+});
+
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on port ${port}`);
+});
+```
+
+### 4.3 Test Locally
+
+Start the server:
+
+```bash
+node index.js
+```
+
+Open a terminal in VM2 and test the connection:
+
+```bash
+curl http://<VM1_IP>:3000
+```
+
+You should receive a JSON response: `{"message": "Hello from Ubuntu VM"}`.
+
+## 5. Phase 4: Containerization with Docker
+
+### 5.1 Install Docker (VM1 & VM2)
+
+Run the following commands on both VM1 and VM2 to install and enable Docker:
+
+```bash
+sudo apt install -y docker.io
+sudo systemctl enable --now docker
+```
+
+### 5.2 Create Dockerfile (VM1)
+
+Inside the `new-service` directory on VM1, create a file named `Dockerfile` with the following content:
+
+```dockerfile
+FROM node:18
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "index.js"]
+```
+
+### 5.3 Build & Run Image (VM1)
+
+Build the Docker image:
+
+```bash
+sudo docker build -t new-service .
+```
+
+Run the container in detached mode:
+
+```bash
+sudo docker run -d -p 3000:3000 new-service
+```
+
+Verify it is running:
+
+```bash
+sudo docker ps
+```
+
+## 6. Phase 5: Deployment via Docker Hub
+
+### 6.1 Push Image (VM1)
+
+Log in to Docker Hub (create an account at hub.docker.com if you haven't already):
+
+```bash
+sudo docker login
+```
+
+Tag your image:
+
+```bash
+sudo docker tag new-service <your_dockerhub_username>/new-service:latest
+```
+
+Push the image to the registry:
+
+```bash
+sudo docker push <your_dockerhub_username>/new-service:latest
+```
+
+### 6.2 Pull & Run (VM2)
+
+Switch to VM2 and deploy the image:
+
+Pull the image from Docker Hub:
+
+```bash
+sudo docker pull <your_dockerhub_username>/new-service:latest
+```
+
+Run the container:
+
+```bash
+sudo docker run -d -p 3000:3000 <your_dockerhub_username>/new-service:latest
+```
+
+## 7. Phase 6: Load Balancer Setup (VM3)
+
+### 7.1 Install Nginx
+
+On the third VM (VM3), install Nginx:
+
+```bash
+sudo apt update
+sudo apt install -y nginx
+```
+
+### 7.2 Configure Load Balancing
+
+Edit the Nginx configuration file (typically `/etc/nginx/nginx.conf` or `/etc/nginx/sites-available/default`). Add or modify the `http` block to include the upstream configuration:
+
+```nginx
+http {
+    upstream backend_cluster {
+        # Replace with your actual IPs
+        server 10.0.2.4:3000; 
+        server 10.0.2.5:3000;
+    }
+
+    server {
+        listen 80;
+        
+        location / {
+            proxy_pass http://backend_cluster;
+        }
+    }
+}
+```
+
+### 7.3 Restart Nginx
+
+Validate the configuration and restart the service:
+
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+## 8. Final Verification
+
+To verify that the load balancer is working and distributing traffic between VM1 and VM2:
+
+1. Find the IP address of VM3 (Load Balancer).
+2. Run the following loop command from your host machine or another terminal:
+
+```bash
+while true; do curl http://<VM3_IP>; echo; sleep 1; done
+```
+
+**Result**: Nginx will distribute these requests between VM1 and VM2 (often using a Round Robin algorithm by default).
