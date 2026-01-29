@@ -48,21 +48,31 @@ You must create three separate Virtual Machines:
 ### 3.1 Verify Connectivity
 
 1. Open the terminal in MH-VM1 and MH-VM2.
+
+
+
+
 2. Find the IP address of each machine using the following command:
 
 ```bash
 ip a
 ```
 
+# MH-VM1 IP Address 
+![alt text](image-1.png)
+
+# MH-VM2 IP Address 
+![alt text](image.png)
 3. Note down the IP addresses (e.g., 10.0.2.4 for VM1 and 10.0.2.5 for VM2).
 
 ### 3.2 Test Connection
 
-To ensure the VMs can communicate with each other, run a ping command from VM2 to VM1:
+ VMs can communicate with each other, I tried ping command from MH-VM2 to MH-VM1:
 
 ```bash
-ping <VM1_IP_ADDRESS>
+ping 10.0.2.15
 ```
+![alt text](image-2.png)
 
 If you see bytes being transferred, the connection is successful.
 
