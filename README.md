@@ -76,6 +76,94 @@ ping 10.0.2.15
 
 If you see bytes being transferred, the connection is successful.
 
+### 3.2.1 Fix Same IP Address Issue (If VMs Have Same IP)
+
+If both VMs show the same IP address (e.g., 10.0.2.15), you need to configure a Host-Only Network to allow proper communication between VMs.
+
+**Steps to Configure Host-Only Network:**
+
+1. **Create a Host-Only Network in VirtualBox:**
+   - Open VirtualBox Manager
+   - Go to **Tools** → **Network Manager**
+   - Select **Host-only Networks** tab
+   - Click **Create** to add a new Host-Only Network
+   - Note the network details (e.g., 192.168.56.0/24)
+   - Ensure DHCP Server is enabled or configure manually
+
+2. **Configure Network Adapter for Each VM:**
+   - Shut down both VMs
+   - Right-click **MH-VM1** → **Settings** → **Network**
+   - **Adapter 1**: Change "Attached to" to **Host-Only Adapter**
+   - Select the Host-Only network you created
+   - **Adapter 2** (Optional): Set to **NAT** for internet access
+   - Click OK
+   - Repeat the same steps for **MH-VM2**
+
+3. **Assign Static IP Addresses Inside Each VM:**
+   
+   Boot each VM and open terminal, then configure static IPs:
+
+   **For MH-VM1:**
+   ```bash
+   sudo nano /etc/netplan/01-netcfg.yaml
+   ```
+   
+   Add the following configuration:
+   ```yaml
+   network:
+     version: 2
+     ethernets:
+       enp0s3:
+         dhcp4: no
+         addresses: [192.168.56.10/24]
+         nameservers:
+           addresses: [8.8.8.8, 8.8.4.4]
+   ```
+
+   **For MH-VM2:**
+   ```bash
+   sudo nano /etc/netplan/01-netcfg.yaml
+   ```
+   
+   Add the following configuration:
+   ```yaml
+   network:
+     version: 2
+     ethernets:
+       enp0s3:
+         dhcp4: no
+         addresses: [192.168.56.11/24]
+         nameservers:
+           addresses: [8.8.8.8, 8.8.4.4]
+   ```
+
+4. **Apply the Network Configuration:**
+   ```bash
+   sudo netplan apply
+   ```
+
+5. **Verify the New IP Addresses:**
+   ```bash
+   ip a
+   ```
+   
+   MH-VM1 should show: 192.168.56.10  
+   MH-VM2 should show: 192.168.56.11
+
+6. **Test Connectivity Between VMs:**
+   
+   From MH-VM1, ping MH-VM2:
+   ```bash
+   ping 192.168.56.11
+   ```
+   
+   From MH-VM2, ping MH-VM1:
+   ```bash
+   ping 192.168.56.10
+   ```
+
+**Note**: Update all IP addresses in subsequent steps to use the new static IPs (192.168.56.10 and 192.168.56.11).
+
 ### 3.3 Install Dependencies (VM1 & VM2)
 
 Update the package manager and install Node.js and npm on both application VMs (VM1 and VM2):
