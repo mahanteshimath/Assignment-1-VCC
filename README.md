@@ -295,7 +295,7 @@ flowchart TB
 3. **Verification**: Use ping and curl commands to test connectivity and application responses
 -----------------------------------------
 -----------------------------------
-## Extension experiment of Assignment 1 VCC mh-vm3
+## Extension of Assignment 1 VCC mh-vm3
 
 --------------------------------------
 ![alt text](image-7.png)
