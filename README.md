@@ -247,11 +247,12 @@ The microservice-based application is deployed across two Virtual Machines with 
 1. **Direct Server Testing**: Connect directly to MH-VM1 (10.0.2.3:3000) or MH-VM2 (10.0.2.4:3000)
 2. **Inter-VM Communication**: Test communication between VMs using curl commands
 3. **Verification**: Use ping and curl commands to test connectivity and application responses
-
+-----------------------------------------
+-----------------------------------
 ## Extension experiment of Assignment 1 VCC 
 I will  continue for my learning purpose 
+--------------------------------------
 ![alt text](image-7.png)
-
 
 ## 5. Phase 4: Containerization with Docker
 
