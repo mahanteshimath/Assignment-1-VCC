@@ -26,11 +26,11 @@ Ensure you have the following software downloaded:
 
 ### 2.2 Create Virtual Machines
 
-You must create three separate Virtual Machines:
+Created 2 separate Virtual Machines:
 
 - **MH-VM1**: Application Server 1
 - **MH-VM2**: Application Server 2
-- **MH-VM3**: Load Balancer(Extra step extension of problem statement)
+
 
 **Steps for each VM:**
 
@@ -41,7 +41,7 @@ You must create three separate Virtual Machines:
 5. **Hard Disk**: The default 25GB is sufficient.
 6. **Finish**: Click Finish to create the VM.
 7. **Install OS**: Start the VM and follow the on-screen prompts to install Ubuntu.
-8. **Repeat**: Perform these steps again to create VM2 and VM3.
+8. **Repeat**: Perform these steps again to create VM2
 
 ## 3. Phase 2: Networking & Basic Configuration
 
