@@ -55,7 +55,7 @@ Created 2 separate Virtual Machines:
 
 ### 3.1 Verify Connectivity
 
-1. Open the terminal in MH-VM1 and MH-VM2.
+1. Open the terminal in mh-vm1 andmh-vm2.
 
 
 
@@ -66,23 +66,22 @@ Created 2 separate Virtual Machines:
 ip a
 ```
 
-# MH-VM1 IP Address :10.0.2.3
-# MH-VM2 IP Address :10.0.2.4
+mh-vm1 IP Address :10.0.2.3
+mh-vm2 IP Address :10.0.2.4
 
 ![alt text](image-1.png)
 
 
-3. Note down the IP addresses (e.g., 10.0.2.3 for VM1 and 10.0.2.4 for VM2).
 
 ### 3.2 Test Connection
 
- VMs can communicate with each other, I tried ping command from MH-VM2 to MH-VM1:
+ VMs can communicate with each other, I tried ping command from mh-vm2  to mh-vm1:
 
 ```bash
 ping 10.0.2.3
 ```
 
- VMs can communicate with each other, I tried ping command from MH-VM1 to MH-VM2:
+ VMs can communicate with each other, I tried ping command from mh-vm1 to mh-vm2 :
 
 ```bash
 ping 10.0.2.4
