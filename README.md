@@ -248,7 +248,7 @@ The microservice-based application is deployed across two Virtual Machines with 
 2. **Inter-VM Communication**: Test communication between VMs using curl commands
 3. **Verification**: Use ping and curl commands to test connectivity and application responses
 
-------------Extension experiment of Assignment 1 VCC
+## Extension experiment of Assignment 1 VCC
 ## 5. Phase 4: Containerization with Docker
 
 ### 5.1 Install Docker (mh-vm1 & mh-vm2)
