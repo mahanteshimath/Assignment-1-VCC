@@ -88,6 +88,8 @@ ping 10.0.2.3
 ping 10.0.2.4
 ```
 
+
+![alt text](image-6.png)
 ### 3.3 Install Dependencies (mh-vm1 & vm-m2)
 
 Update the package manager and install Node.js and npm on both application VMs (VM1 and VM2):
