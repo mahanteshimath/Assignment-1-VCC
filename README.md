@@ -237,7 +237,11 @@ node index.js
 
 
 
-Open a terminal in VM2 and test the connection:
+Open a terminal in mh-vm2 and test the connection:
+
+# installed curl in mh-vm2
+
+![alt text](image-2.png)
 
 ```bash
 curl http://<VM1_IP>:3000
