@@ -166,6 +166,87 @@ JSON response received from microservice running in mh-vm1
 
 ![alt text](image-3.png)
 
+## Architecture Design Diagram
+
+### System Overview
+
+The microservice-based application is deployed across two Virtual Machines with the following architecture:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    NAT Network (10.0.2.0/24)                    │
+│                                                                 │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │            Host Machine (Client/Testing)                 │  │
+│  │            Terminal/Browser                              │  │
+│  └────────────────────┬─────────────────────────────────────┘  │
+│                       │                                         │
+│      ┌────────────────┴────────────────┐                        │
+│      │                                 │                        │
+│  ┌───▼──────────────────┐  ┌──────────▼──────────────────┐    │
+│  │     MH-VM1           │  │        MH-VM2              │    │
+│  │  (App Server 1)      │  │    (App Server 2)          │    │
+│  │                      │  │                            │    │
+│  │ Node.js Express      │  │  Node.js Express           │    │
+│  │ Microservice         │  │  Microservice              │    │
+│  │ Port: 3000           │  │  Port: 3000                │    │
+│  │ IP: 10.0.2.3         │  │  IP: 10.0.2.4              │    │
+│  │                      │  │                            │    │
+│  │ Running Directly     │  │  Running Directly          │    │
+│  │ on Ubuntu            │  │  on Ubuntu                 │    │
+│  └──────────────────────┘  └────────────────────────────┘    │
+│           ▲                                 ▲                  │
+│           │                                 │                  │
+│           └────────────────┬────────────────┘                  │
+│                            │                                   │
+│                   Direct Communication                         │
+│                                                                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Architecture Components
+
+#### 1. **Application Servers (MH-VM1 & MH-VM2)**
+   - **Role**: Run the microservice application
+   - **Software Stack**: 
+     - Node.js (JavaScript runtime)
+     - Express (Web framework)
+   - **Microservice Details**:
+     - REST API endpoint: `/` (returns JSON message)
+     - Port: 3000
+   - **IP Addresses**:
+     - MH-VM1: 10.0.2.3
+     - MH-VM2: 10.0.2.4
+   - **Deployment Method**: Running directly on Ubuntu OS
+
+#### 2. **Network Configuration**
+   - **Network Type**: NAT Network (Virtual Network)
+   - **Network Range**: 10.0.2.0/24
+   - **Communication**: VMs communicate via the NAT network
+   - **Features**: 
+     - VMs can reach each other directly (verified via ping)
+     - Isolated from host machine network
+     - Centralized gateway for external connectivity
+
+### Data Flow
+
+1. **Client Request**: User sends HTTP request to application server (10.0.2.3:3000 or 10.0.2.4:3000)
+2. **Application Processing**: Express server processes request and returns JSON response
+3. **Response Return**: Response is sent back to client
+
+### Key Features
+
+- **Microservice Architecture**: Independent application instances running on separate VMs
+- **Network Isolation**: NAT Network ensures secure VM-to-VM communication
+- **Direct Deployment**: Simple Node.js Express servers running directly on Ubuntu
+- **Inter-VM Communication**: VMs can communicate directly for testing and debugging
+- **Scalability**: New application servers can be added to the NAT network
+
+### Testing Approach
+
+1. **Direct Server Testing**: Connect directly to MH-VM1 (10.0.2.3:3000) or MH-VM2 (10.0.2.4:3000)
+2. **Inter-VM Communication**: Test communication between VMs using curl commands
+3. **Verification**: Use ping and curl commands to test connectivity and application responses
 
 ------------Extension experiment of Assignment 1 VCC
 ## 5. Phase 4: Containerization with Docker
