@@ -172,7 +172,6 @@ JSON response received from microservice running in mh-vm1
 
 The microservice-based application is deployed across two Virtual Machines with the following architecture:
 
-#### Mermaid Architecture Diagram
 
 ```mermaid
 flowchart TB
@@ -296,8 +295,8 @@ flowchart TB
 3. **Verification**: Use ping and curl commands to test connectivity and application responses
 -----------------------------------------
 -----------------------------------
-## Extension experiment of Assignment 1 VCC VM3
-I will  continue for my learning purpose (Due to sytem RAM )
+## Extension experiment of Assignment 1 VCC mh-vm3
+
 --------------------------------------
 ![alt text](image-7.png)
 
@@ -331,7 +330,7 @@ CMD ["node", "index.js"]
 Build the Docker image:
 
 ```bash
-sudo docker build -t new-service .
+sudo docker build -t new-service
 ```
 
 Run the container in detached mode:
@@ -350,7 +349,7 @@ sudo docker ps
 
 ### 6.1 Push Image (mh-vm1)
 
-Log in to Docker Hub (create an account at hub.docker.com if you haven't already):
+logged in docker
 
 ```bash
 sudo docker login
@@ -359,13 +358,13 @@ sudo docker login
 Tag your image:
 
 ```bash
-sudo docker tag new-service <your_dockerhub_username>/new-service:latest
+sudo docker tag new-service hackermonty/new-service:latest
 ```
-
+![alt text](image-8.png)
 Push the image to the registry:
 
 ```bash
-sudo docker push <your_dockerhub_username>/new-service:latest
+sudo docker push hackermonty/new-service:latest
 ```
 
 ### 6.2 Pull & Run (mh-vm2)
@@ -375,16 +374,16 @@ Switch to mh-vm2 and deploy the image:
 Pull the image from Docker Hub:
 
 ```bash
-sudo docker pull <your_dockerhub_username>/new-service:latest
+sudo docker pull hackermonty/new-service:latest
 ```
 
 Run the container:
 
 ```bash
-sudo docker run -d -p 3000:3000 <your_dockerhub_username>/new-service:latest
+sudo docker run -d -p 3000:3000 hackermonty/new-service:latest
 ```
 
-## 7. Phase 6: Load Balancer Setup (VM3)
+## 7. Phase 6: Load Balancer Setup (mh-vm3)
 
 ### 7.1 Install Nginx
 
@@ -402,9 +401,9 @@ Edit the Nginx configuration file (typically `/etc/nginx/nginx.conf` or `/etc/ng
 ```nginx
 http {
     upstream backend_cluster {
-        # Replace with your actual IPs
-        server 10.0.2.4:3000; 
-        server 10.0.2.5:3000;
+       
+        server 10.0.2.3:3000; 
+        server 10.0.2.4:3000;
     }
 
     server {
@@ -426,7 +425,7 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-## 8. Final Verification
+## 8. Final step
 
 To verify that the load balancer is working and distributing traffic between mh-vm1 and mh-vm3:
 
@@ -434,7 +433,7 @@ To verify that the load balancer is working and distributing traffic between mh-
 2. Run the following loop command from your host machine or another terminal:
 
 ```bash
-while true; do curl http://<mh-vm3_IP>; echo; sleep 1; done
+while true; do curl http://10.0.2.5; echo; sleep 1; done
 ```
 
-**Result**: Nginx will distribute these requests between VM1 and VM2 (often using a Round Robin algorithm by default).
+**Result**: Nginx will distribute these requests between mh-vm1 and mh-vm2 (often using a Round Robin algorithm by default).
