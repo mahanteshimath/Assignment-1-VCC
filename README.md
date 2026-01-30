@@ -59,10 +59,10 @@ ip a
 ```
 
 # MH-VM1 IP Address 
-![alt text](image-1.png)
+![alt text](image.png)
 
 # MH-VM2 IP Address 
-![alt text](image.png)
+
 3. Note down the IP addresses (e.g., 10.0.2.4 for VM1 and 10.0.2.5 for VM2).
 
 ### 3.2 Test Connection
