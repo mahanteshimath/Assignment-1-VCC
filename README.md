@@ -172,6 +172,53 @@ JSON response received from microservice running in mh-vm1
 
 The microservice-based application is deployed across two Virtual Machines with the following architecture:
 
+#### Mermaid Architecture Diagram
+
+```mermaid
+flowchart TB
+    %% =========================
+    %% External Client Layer
+    %% =========================
+    Client["Client Machine<br/>(Host OS)<br/>Browser / Terminal"]
+
+    %% =========================
+    %% Network Layer
+    %% =========================
+    subgraph NAT["NAT Network (10.0.2.0/24)"]
+        direction TB
+
+        %% -------------------------
+        %% Application Servers
+        %% -------------------------
+        subgraph VM1["MH-VM1 : Application Server 1"]
+            direction TB
+            VM1OS["Ubuntu OS"]
+            VM1App["Node.js (Express)<br/>Microservice A<br/>Port: 3000<br/>IP: 10.0.2.3"]
+            VM1OS --> VM1App
+        end
+
+        subgraph VM2["MH-VM2 : Application Server 2"]
+            direction TB
+            VM2OS["Ubuntu OS"]
+            VM2App["Node.js (Express)<br/>Microservice B<br/>Port: 3000<br/>IP: 10.0.2.4"]
+            VM2OS --> VM2App
+        end
+
+        %% -------------------------
+        %% Internal Communication
+        %% -------------------------
+        VM1App <-->|REST / HTTP| VM2App
+    end
+
+    %% =========================
+    %% Client Access
+    %% =========================
+    Client -->|HTTP Requests| VM1App
+    Client -->|HTTP Requests| VM2App
+```
+
+#### Architecture Diagram
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    NAT Network (10.0.2.0/24)                    │
