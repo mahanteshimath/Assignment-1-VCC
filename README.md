@@ -153,7 +153,9 @@ Open a terminal in mh-vm2 and test the connection:
 curl http://10.0.2.3:3000
 ```
 
-You should receive a JSON response: `{"message": "Hello from Ubuntu VM"}`.
+JSON response received from microservice running in mh-vm1
+
+![alt text](image-3.png)
 
 ## 5. Phase 4: Containerization with Docker
 
