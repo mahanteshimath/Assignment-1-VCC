@@ -58,21 +58,29 @@ You must create three separate Virtual Machines:
 ip a
 ```
 
-# MH-VM1 IP Address 
-![alt text](image.png)
+# MH-VM1 IP Address :10.0.2.3
+# MH-VM2 IP Address :10.0.2.4
 
-# MH-VM2 IP Address 
+![alt text](image-1.png)
 
-3. Note down the IP addresses (e.g., 10.0.2.4 for VM1 and 10.0.2.5 for VM2).
+
+3. Note down the IP addresses (e.g., 10.0.2.3 for VM1 and 10.0.2.4 for VM2).
 
 ### 3.2 Test Connection
 
  VMs can communicate with each other, I tried ping command from MH-VM2 to MH-VM1:
 
 ```bash
-ping 10.0.2.15
+ping 10.0.2.3
 ```
-![alt text](image-2.png)
+
+ VMs can communicate with each other, I tried ping command from MH-VM1 to MH-VM2:
+
+```bash
+ping 10.0.2.4
+```
+
+
 
 If you see bytes being transferred, the connection is successful.
 
@@ -207,7 +215,7 @@ const app = express();
 const port = 3000;
 
 app.get('/', (req, res) => {
-    res.json({ message: 'Hello from Ubuntu VM' });
+    res.json({ message: 'Hello from Mahantesh I am  mh-vm1' });
 });
 
 app.listen(port, '0.0.0.0', () => {
@@ -222,6 +230,12 @@ Start the server:
 ```bash
 node index.js
 ```
+
+
+![alt text](image.png)
+
+
+
 
 Open a terminal in VM2 and test the connection:
 
