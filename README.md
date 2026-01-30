@@ -91,14 +91,14 @@ ping 10.0.2.4
 ![alt text](image-6.png)
 ### 3.3 Install Dependencies (mh-vm1 & vm-m2)
 
-Update the package manager and install Node.js and npm on both application VMs (VM1 and VM2):
+Update the package manager and install Node.js and npm on both application VMs (mh-vm1 & vm-m2):
 
 ```bash
 sudo apt update
 sudo apt install -y nodejs npm
 ```
 
-## 4. Phase 3: Microservice Development (VM1)
+## 4. Phase 3: Microservice Development (mh-vm1)
 
 ### 4.1 Initialize Project
 
@@ -249,8 +249,8 @@ The microservice-based application is deployed across two Virtual Machines with 
 3. **Verification**: Use ping and curl commands to test connectivity and application responses
 -----------------------------------------
 -----------------------------------
-## Extension experiment of Assignment 1 VCC 
-I will  continue for my learning purpose 
+## Extension experiment of Assignment 1 VCC VM3
+I will  continue for my learning purpose (Due to sytem RAM )
 --------------------------------------
 ![alt text](image-7.png)
 
