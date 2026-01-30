@@ -157,9 +157,11 @@ JSON response received from microservice running in mh-vm1
 
 ![alt text](image-3.png)
 
+
+------------Extension experiment of Assignment 1 VCC
 ## 5. Phase 4: Containerization with Docker
 
-### 5.1 Install Docker (VM1 & VM2)
+### 5.1 Install Docker (mh-vm1 & mh-vm2)
 
 Run the following commands on both VM1 and VM2 to install and enable Docker:
 
@@ -168,7 +170,7 @@ sudo apt install -y docker.io
 sudo systemctl enable --now docker
 ```
 
-### 5.2 Create Dockerfile (VM1)
+### 5.2 Create Dockerfile (mh-vm1)
 
 Inside the `new-service` directory on VM1, create a file named `Dockerfile` with the following content:
 
@@ -182,7 +184,7 @@ EXPOSE 3000
 CMD ["node", "index.js"]
 ```
 
-### 5.3 Build & Run Image (VM1)
+### 5.3 Build & Run Image (mh-vm1)
 
 Build the Docker image:
 
@@ -204,7 +206,7 @@ sudo docker ps
 
 ## 6. Phase 5: Deployment via Docker Hub
 
-### 6.1 Push Image (VM1)
+### 6.1 Push Image (mh-vm1)
 
 Log in to Docker Hub (create an account at hub.docker.com if you haven't already):
 
@@ -224,9 +226,9 @@ Push the image to the registry:
 sudo docker push <your_dockerhub_username>/new-service:latest
 ```
 
-### 6.2 Pull & Run (VM2)
+### 6.2 Pull & Run (mh-vm2)
 
-Switch to VM2 and deploy the image:
+Switch to mh-vm2 and deploy the image:
 
 Pull the image from Docker Hub:
 
@@ -244,7 +246,7 @@ sudo docker run -d -p 3000:3000 <your_dockerhub_username>/new-service:latest
 
 ### 7.1 Install Nginx
 
-On the third VM (VM3), install Nginx:
+On the third VM (mh-vm3), install Nginx:
 
 ```bash
 sudo apt update
@@ -284,13 +286,13 @@ sudo systemctl restart nginx
 
 ## 8. Final Verification
 
-To verify that the load balancer is working and distributing traffic between VM1 and VM2:
+To verify that the load balancer is working and distributing traffic between mh-vm1 and mh-vm3:
 
 1. Find the IP address of VM3 (Load Balancer).
 2. Run the following loop command from your host machine or another terminal:
 
 ```bash
-while true; do curl http://<VM3_IP>; echo; sleep 1; done
+while true; do curl http://<mh-vm3_IP>; echo; sleep 1; done
 ```
 
 **Result**: Nginx will distribute these requests between VM1 and VM2 (often using a Round Robin algorithm by default).
