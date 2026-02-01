@@ -397,6 +397,8 @@ Verify it is running:
 ```bash
 sudo docker ps
 ```
+![alt text](image-10.png)
+
 
 ## 6. Phase 5: Deployment via Docker Hub
 
@@ -419,6 +421,8 @@ Push the image to the registry:
 ```bash
 sudo docker push hackermonty/new-service:latest
 ```
+
+![alt text](image-11.png)
 
 ### 6.2 Pull & Run (mh-vm2)
 
