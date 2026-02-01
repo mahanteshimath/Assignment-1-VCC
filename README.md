@@ -381,8 +381,10 @@ You should see all the Dockerfile instructions displayed in the terminal.
 Build the Docker image:
 
 ```bash
-sudo docker build -t new-service
+sudo docker build -t new-service .
 ```
+
+**Note**: The `.` at the end specifies the build context (current directory). Docker will look for the Dockerfile in the current directory and use files from this location during the build.
 
 Run the container in detached mode:
 
