@@ -471,7 +471,8 @@ Boot mh-vm3 and check its IP address:
 ip a
 ```
 
-**Expected**: mh-vm3 should get an IP like `10.0.2.5` (or similar in the 10.0.2.x range)
+
+![alt text](image-13.png)
 
 #### Step 4: Test Connectivity
 
