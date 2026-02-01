@@ -501,6 +501,51 @@ sudo apt update
 sudo apt install -y nginx
 ```
 
+#### Troubleshooting: dpkg Interrupted Error
+
+If you encounter an error like:
+```
+E: dpkg was interrupted, you must manually run 'sudo dpkg --configure -a' to correct the problem.
+```
+
+This means a previous package installation was interrupted. Fix it with these steps:
+
+**Step 1: Configure interrupted packages**
+
+```bash
+sudo dpkg --configure -a
+```
+
+**Step 2: Fix any broken dependencies**
+
+```bash
+sudo apt --fix-broken install
+```
+
+**Step 3: Clean the package cache**
+
+```bash
+sudo apt clean
+sudo apt autoclean
+```
+
+**Step 4: Update and try installing nginx again**
+
+```bash
+sudo apt update
+sudo apt install -y nginx
+```
+
+If the error persists, you may need to manually remove the lock files:
+
+```bash
+sudo rm /var/lib/dpkg/lock-frontend
+sudo rm /var/lib/dpkg/lock
+sudo rm /var/cache/apt/archives/lock
+sudo dpkg --configure -a
+sudo apt update
+```
+
 #### Verify Installation
 
 Check that Nginx is installed and running:
