@@ -421,8 +421,7 @@ Push the image to the registry:
 ```bash
 sudo docker push hackermonty/new-service:latest
 ```
-
-![alt text](image-11.png)
+![alt text](image-12.png)
 
 ### 6.2 Pull & Run (mh-vm2)
 
