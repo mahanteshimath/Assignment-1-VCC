@@ -571,7 +571,7 @@ You should see that Nginx is active and running.
 From another VM or terminal, access the default Nginx page:
 
 ```bash
-curl http://10.0.2.5
+curl http://10.0.2.15
 ```
 
 You should see the default "Welcome to nginx!" HTML page.
@@ -691,7 +691,7 @@ Ensure the status shows "active (running)".
 From any VM or terminal, send a request to the load balancer:
 
 ```bash
-curl http://10.0.2.5
+curl http://10.0.2.15
 ```
 
 You should see a JSON response from either mh-vm1 or mh-vm2.
@@ -701,10 +701,10 @@ You should see a JSON response from either mh-vm1 or mh-vm2.
 Send multiple requests to observe round-robin distribution:
 
 ```bash
-curl http://10.0.2.5
-curl http://10.0.2.5
-curl http://10.0.2.5
-curl http://10.0.2.5
+curl http://10.0.2.15
+curl http://10.0.2.15
+curl http://10.0.2.15
+curl http://10.0.2.15
 ```
 
 You should see responses alternating between:
@@ -767,7 +767,7 @@ To verify that the load balancer is working and distributing traffic between mh-
 2. Run the following loop command from your host machine or another terminal:
 
 ```bash
-while true; do curl http://10.0.2.5; echo; sleep 1; done
+while true; do curl http://10.0.2.15; echo; sleep 1; done
 ```
 
 **Result**: Nginx will distribute these requests between mh-vm1 and mh-vm2 (often using a Round Robin algorithm by default).
