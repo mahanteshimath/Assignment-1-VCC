@@ -319,6 +319,22 @@ sudo systemctl enable --now docker
 
 Inside the `new-service` directory on VM1, create a file named `Dockerfile` with the following content:
 
+#### Step 1: Navigate to the project directory
+
+```bash
+cd ~/new-service
+```
+
+#### Step 2: Create the Dockerfile
+
+Use nano or your preferred text editor:
+
+```bash
+nano Dockerfile
+```
+
+#### Step 3: Add Dockerfile content
+
 ```dockerfile
 FROM node:18
 WORKDIR /usr/src/app
@@ -328,6 +344,37 @@ COPY . .
 EXPOSE 3000
 CMD ["node", "index.js"]
 ```
+
+**Explanation of Dockerfile Instructions:**
+
+- **`FROM node:18`**: Uses the official Node.js version 18 image as the base. This provides a pre-configured Linux environment with Node.js and npm installed.
+
+- **`WORKDIR /usr/src/app`**: Sets the working directory inside the container to `/usr/src/app`. All subsequent commands will execute from this directory.
+
+- **`COPY package*.json ./`**: Copies `package.json` and `package-lock.json` (if exists) from your local machine to the container. This is done separately to leverage Docker's layer caching—if dependencies haven't changed, Docker can reuse this layer.
+
+- **`RUN npm install`**: Installs all the Node.js dependencies specified in `package.json`. This step runs during the image build process.
+
+- **`COPY . .`**: Copies all remaining files from the current directory on your host machine into the container's working directory. This includes `index.js` and any other application files.
+
+- **`EXPOSE 3000`**: Documents that the container will listen on port 3000 at runtime. This doesn't actually publish the port; it's informational for users of the image.
+
+- **`CMD ["node", "index.js"]`**: Specifies the command to run when the container starts. This starts your Node.js application using the `index.js` file.
+
+#### Step 4: Save and exit
+
+- If using nano: Press `Ctrl+X`, then `Y`, then `Enter`
+- If using vi/vim: Press `Esc`, type `:wq`, then `Enter`
+
+#### Step 5: Verify the Dockerfile
+
+Check that the file was created successfully:
+
+```bash
+cat Dockerfile
+```
+
+You should see all the Dockerfile instructions displayed in the terminal.
 
 ### 5.3 Build & Run Image (mh-vm1)
 
