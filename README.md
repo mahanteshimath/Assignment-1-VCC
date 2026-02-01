@@ -442,45 +442,269 @@ sudo docker run -d -p 3000:3000 hackermonty/new-service:latest
 
 ## 7. Phase 6: Load Balancer Setup (mh-vm3)
 
-### 7.1 Install Nginx
+### 7.1 Create and Configure Third VM (mh-vm3)
 
-On the third VM (mh-vm3), install Nginx:
+#### Step 1: Create MH-VM3
+
+Follow the same VM creation process from Phase 1 (Section 2.2) to create a third VM:
+
+1. Open VirtualBox and click **New**
+2. **Name**: "Microservice MH-VM3" (Load Balancer)
+3. **ISO Image**: Select Ubuntu ISO
+4. **Hardware**: Allocate 3GB RAM and 2 CPUs
+5. **Hard Disk**: 25GB is sufficient
+6. Install Ubuntu following on-screen prompts
+
+#### Step 2: Configure Network
+
+Ensure mh-vm3 is connected to the same NAT Network as mh-vm1 and mh-vm2:
+
+1. In VirtualBox, select MH-VM3
+2. Click **Settings** → **Network**
+3. Set **Attached to**: NAT Network
+4. Select the same NAT Network used for VM1 and VM2
+
+#### Step 3: Verify IP Address
+
+Boot mh-vm3 and check its IP address:
+
+```bash
+ip a
+```
+
+**Expected**: mh-vm3 should get an IP like `10.0.2.5` (or similar in the 10.0.2.x range)
+
+#### Step 4: Test Connectivity
+
+Verify mh-vm3 can reach both application servers:
+
+```bash
+# Test connection to mh-vm1
+ping -c 4 10.0.2.3
+
+# Test connection to mh-vm2
+ping -c 4 10.0.2.4
+
+# Test HTTP connectivity to services
+curl http://10.0.2.3:3000
+curl http://10.0.2.4:3000
+```
+
+### 7.2 Install Nginx
+
+On mh-vm3, install Nginx web server which will act as the load balancer:
 
 ```bash
 sudo apt update
 sudo apt install -y nginx
 ```
 
-### 7.2 Configure Load Balancing
+#### Verify Installation
 
-Edit the Nginx configuration file (typically `/etc/nginx/nginx.conf` or `/etc/nginx/sites-available/default`). Add or modify the `http` block to include the upstream configuration:
+Check that Nginx is installed and running:
+
+```bash
+# Check Nginx version
+nginx -v
+
+# Check Nginx service status
+sudo systemctl status nginx
+```
+
+You should see that Nginx is active and running.
+
+#### Test Default Nginx Page
+
+From another VM or terminal, access the default Nginx page:
+
+```bash
+curl http://10.0.2.5
+```
+
+You should see the default "Welcome to nginx!" HTML page.
+
+### 7.3 Configure Load Balancing
+
+Now configure Nginx to distribute traffic between mh-vm1 and mh-vm2.
+
+#### Step 1: Backup Original Configuration
+
+Always backup before making changes:
+
+```bash
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.backup
+```
+
+#### Step 2: Edit Configuration File
+
+Open the Nginx default site configuration:
+
+```bash
+sudo nano /etc/nginx/sites-available/default
+```
+
+#### Step 3: Replace Configuration
+
+Delete the existing content and replace it with the following load balancer configuration:
 
 ```nginx
-http {
-    upstream backend_cluster {
-       
-        server 10.0.2.3:3000; 
-        server 10.0.2.4:3000;
-    }
+upstream backend_cluster {
+    # Define backend servers
+    server 10.0.2.3:3000;  # mh-vm1
+    server 10.0.2.4:3000;  # mh-vm2
+}
 
-    server {
-        listen 80;
+server {
+    listen 80;
+    listen [::]:80;
+    
+    server_name _;
+    
+    location / {
+        # Pass requests to the backend cluster
+        proxy_pass http://backend_cluster;
         
-        location / {
-            proxy_pass http://backend_cluster;
-        }
+        # Pass original client information
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Timeout settings
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
     }
 }
 ```
 
-### 7.3 Restart Nginx
+**Configuration Explanation:**
 
-Validate the configuration and restart the service:
+- **`upstream backend_cluster`**: Defines a group of backend servers. Nginx will distribute requests among these servers using round-robin algorithm by default.
+
+- **`server 10.0.2.3:3000`** and **`server 10.0.2.4:3000`**: The two application servers that will receive load-balanced traffic.
+
+- **`listen 80`**: Nginx listens on port 80 (standard HTTP port) for incoming requests.
+
+- **`proxy_pass http://backend_cluster`**: Forwards incoming requests to one of the backend servers in the cluster.
+
+- **`proxy_set_header`** directives: Pass original client information to backend servers, which is important for logging and application logic.
+
+- **Timeout settings**: Prevent connections from hanging indefinitely.
+
+#### Step 4: Save and Exit
+
+- If using nano: Press `Ctrl+X`, then `Y`, then `Enter`
+- If using vi/vim: Press `Esc`, type `:wq`, then `Enter`
+
+### 7.4 Test and Restart Nginx
+
+#### Step 1: Validate Configuration
+
+Before restarting, check for syntax errors:
 
 ```bash
 sudo nginx -t
+```
+
+**Expected output:**
+```
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+If you see any errors, go back and fix the configuration file.
+
+#### Step 2: Restart Nginx
+
+Apply the new configuration:
+
+```bash
 sudo systemctl restart nginx
 ```
+
+#### Step 3: Verify Nginx is Running
+
+```bash
+sudo systemctl status nginx
+```
+
+Ensure the status shows "active (running)".
+
+### 7.5 Verify Load Balancing
+
+#### Test 1: Single Request
+
+From any VM or terminal, send a request to the load balancer:
+
+```bash
+curl http://10.0.2.5
+```
+
+You should see a JSON response from either mh-vm1 or mh-vm2.
+
+#### Test 2: Multiple Requests
+
+Send multiple requests to observe round-robin distribution:
+
+```bash
+curl http://10.0.2.5
+curl http://10.0.2.5
+curl http://10.0.2.5
+curl http://10.0.2.5
+```
+
+You should see responses alternating between:
+- `{"message":"Hello from Mahantesh I am mh-vm1"}`
+- `{"message":"Hello from Mahantesh I am mh-vm2"}` (if mh-vm2 has different message)
+
+#### Test 3: Check Nginx Logs
+
+View access logs to see which backend server handled each request:
+
+```bash
+sudo tail -f /var/log/nginx/access.log
+```
+
+### 7.6 Troubleshooting
+
+#### Issue: "502 Bad Gateway" Error
+
+**Cause**: Backend servers are not reachable or not running.
+
+**Solution:**
+1. Verify both mh-vm1 and mh-vm2 Docker containers are running:
+   ```bash
+   sudo docker ps
+   ```
+2. Test direct connectivity from mh-vm3:
+   ```bash
+   curl http://10.0.2.3:3000
+   curl http://10.0.2.4:3000
+   ```
+3. Check firewall settings on backend VMs
+
+#### Issue: "Connection Refused"
+
+**Cause**: Nginx is not running or wrong port.
+
+**Solution:**
+```bash
+sudo systemctl restart nginx
+sudo systemctl status nginx
+```
+
+#### Issue: Always Getting Same Server Response
+
+**Cause**: One backend server might be down.
+
+**Solution:**
+- Check which server is responding
+- Verify both Docker containers are running on mh-vm1 and mh-vm2
+- Check Nginx error logs:
+  ```bash
+  sudo tail -f /var/log/nginx/error.log
+  ```
 
 ## 8. Final step
 
