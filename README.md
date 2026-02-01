@@ -480,15 +480,17 @@ Verify mh-vm3 can reach both application servers:
 
 ```bash
 # Test connection to mh-vm1
-ping -c 4 10.0.2.3
+ping 10.0.2.3
 
 # Test connection to mh-vm2
-ping -c 4 10.0.2.4
+ping 10.0.2.4
 
 # Test HTTP connectivity to services
 curl http://10.0.2.3:3000
 curl http://10.0.2.4:3000
 ```
+
+![alt text](image-14.png)
 
 ### 7.2 Install Nginx
 
