@@ -162,9 +162,13 @@ Open a terminal in mh-vm2 and test the connection:
 curl http://10.0.2.3:3000
 ```
 
-JSON response received from microservice running in mh-vm1
+JSON response received from microservice running in mh-vm1 and request sent in mh-vm2
 
 ![alt text](image-3.png)
+
+
+JSON response received from microservice running in mh-vm2 and request sent in mh-vm1
+![alt text](image-9.png)
 
 ## Architecture Design Diagram
 
