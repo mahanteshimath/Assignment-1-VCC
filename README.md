@@ -562,6 +562,8 @@ nginx -v
 sudo systemctl status nginx
 ```
 
+![alt text](image-17.png)
+
 You should see that Nginx is active and running.
 
 #### Test Default Nginx Page
