@@ -666,6 +666,7 @@ nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
 nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
+![alt text](image-18.png)
 If you see any errors, go back and fix the configuration file.
 
 #### Step 2: Restart Nginx
