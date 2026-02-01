@@ -441,6 +441,8 @@ Run the container:
 sudo docker run -d -p 3000:3000 hackermonty/new-service:latest
 ```
 
+![alt text](image-16.png)
+
 ## 7. Phase 6: Load Balancer Setup (mh-vm3)
 
 ### 7.1 Create and Configure Third VM (mh-vm3)
