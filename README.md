@@ -315,6 +315,8 @@ sudo apt install -y docker.io
 sudo systemctl enable --now docker
 ```
 
+Example 
+![alt text](image-15.png)
 ### 5.2 Create Dockerfile (mh-vm1)
 
 Inside the `new-service` directory on VM1, create a file named `Dockerfile` with the following content:
